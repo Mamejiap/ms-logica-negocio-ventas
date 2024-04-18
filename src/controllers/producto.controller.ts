@@ -19,6 +19,8 @@ import {
 } from '@loopback/rest';
 import {Producto} from '../models';
 import {ProductoRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
+import {ConfiguracionSeguridad} from '../config/configuracion.seguridad';
 
 export class ProductoController {
   constructor(
@@ -58,6 +60,10 @@ export class ProductoController {
     return this.productoRepository.count(where);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options:[ConfiguracionSeguridad.menuProductoId, ConfiguracionSeguridad.listarAccion]
+  })
   @get('/producto')
   @response(200, {
     description: 'Array of Producto model instances',

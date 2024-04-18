@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {AuthenticationStrategy} from '@loopback/authentication';
 import {AuthenticationBindings} from '@loopback/authentication/dist/keys';
 import {AuthenticationMetadata} from '@loopback/authentication/dist/types';
@@ -8,7 +6,6 @@ import {HttpErrors, Request} from '@loopback/rest';
 import {UserProfile} from '@loopback/security';
 import parseBearerToken from 'parse-bearer-token';
 import {ConfiguracionSeguridad} from '../config/configuracion.seguridad';
-//import {ConfiguracionSeguridad} from '../config/configuracion.seguridad';
 const fetch = require('node-fetch');
 
 export class AuthStrategy implements AuthenticationStrategy {
@@ -34,31 +31,7 @@ export class AuthStrategy implements AuthenticationStrategy {
       console.log(this.metadata);
 
       // conectarse al microservicio de seguridad
-      const datos = { token: token, idMenu: idMenu, accion: accion };
-      const urlValidarPermisos = `${ConfiguracionSeguridad.enlaceMicroservicioSeguridad}/validar-permisos`;
-      fetch(urlValidarPermisos, {
-        method: 'post',
-        body: JSON.stringify(datos),
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      })
-      .then((res: any) => res.json())
-      .then((json:any) =>  {
-        console.log("Respuesta: ");
-        console.log(json);
-
-        const continuar: boolean = false;
-        if(continuar) {
-          const perfil : UserProfile = Object.assign({
-            permitido: "OK"
-          });
-          return perfil;
-        } else {
-          return undefined;
-        }
-      });
-    }
-
-      /* const datos = {token: token, idMenu: idMenu, accion: accion};
+      const datos = {token: token, idMenu: idMenu, accion: accion};
       const urlValidarPermisos = `${ConfiguracionSeguridad.enlaceMicroservicioSeguridad}/validar-permisos`;
       let res = undefined;
       try {
@@ -80,8 +53,8 @@ export class AuthStrategy implements AuthenticationStrategy {
         }
       } catch (e) {
         throw new HttpErrors[401]("No se tiene permisos sobre la acción a ejecutar.");
-      } */
+      }
+    }
     throw new HttpErrors[401]("No es posible ejecutar la acción por falta de un token.");
   }
-    //throw new HttpErrors[401]("No es posible ejecutar la acción por falta de un token.");
 }
